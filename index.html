@@ -232,6 +232,10 @@
       .setlist-form {
         width: 300px !important;
       }
+
+      .import-button {
+        width: 300px !important;
+      }
     }
 
     .add-song-button {
@@ -373,6 +377,20 @@
     .move-button:hover {
       background-color: #555;
     }
+
+    .import-section {
+      margin: 20px 0;
+      text-align: center;
+    }
+
+    .import-button {
+      background-color: #4CAF50;
+      width: 400px;
+    }
+
+    .import-button:hover {
+      background-color: #45a049;
+    }
   </style>
 </head>
 
@@ -390,8 +408,12 @@
       </div>
     </div>
 
-    <div class="setlist-management">
+    <div class="import-section">
+      <input type="file" id="import-file" accept=".txt" style="display: none;">
+      <button id="import-setlist" class="import-button">Import Song List</button>
+    </div>
 
+    <div class="setlist-management">
       <div id="setlist-container" class="setlist-container">
         <select id="setlist-select" class="setlist-select">
           <option value="">-- Select a Setlist --</option>
@@ -665,6 +687,8 @@
     const setlistSongs = document.getElementById('setlist-songs');
     const exportSetlist = document.getElementById('export-setlist');
     const deleteSetlist = document.getElementById('delete-setlist');
+    const importSetlist = document.getElementById('import-setlist');
+    const importFile = document.getElementById('import-file');
 
     let isRunning = false;
     let interval;
@@ -1083,6 +1107,92 @@
 
     // Load setlists when page loads
     loadSetlists();
+
+    // Import functionality
+    function parseSongLine(line) {
+      // Expected format: "Song Name - Artist Name (BPM)"
+      const match = line.match(/^(.*?)\s*-\s*(.*?)\s*\((\d+)\s*BPM\)$/);
+      if (match) {
+        return {
+          name: match[1].trim(),
+          artist: match[2].trim(),
+          bpm: parseInt(match[3])
+        };
+      }
+      return null;
+    }
+
+    function addSongToLibrary(song) {
+      const firstLetter = song.name.charAt(0).toUpperCase();
+      let optgroup = Array.from(songSelect.getElementsByTagName('optgroup'))
+        .find(group => group.label === firstLetter);
+      
+      if (!optgroup) {
+        optgroup = document.createElement('optgroup');
+        optgroup.label = firstLetter;
+        songSelect.appendChild(optgroup);
+      }
+
+      // Check if song already exists
+      const existingSong = Array.from(optgroup.getElementsByTagName('option'))
+        .find(option => option.text === `${song.name} - ${song.artist}`);
+      
+      if (!existingSong) {
+        const option = document.createElement('option');
+        option.value = song.bpm;
+        option.text = `${song.name} - ${song.artist}`;
+        option.dataset.artist = song.artist;
+        
+        // Insert in alphabetical order
+        const options = Array.from(optgroup.getElementsByTagName('option'));
+        const insertIndex = options.findIndex(opt => opt.text > option.text);
+        
+        if (insertIndex === -1) {
+          optgroup.appendChild(option);
+        } else {
+          optgroup.insertBefore(option, options[insertIndex]);
+        }
+      }
+    }
+
+    function importSongList(file) {
+      const reader = new FileReader();
+      reader.onload = function(e) {
+        const content = e.target.result;
+        const lines = content.split('\n').filter(line => line.trim());
+        
+        // Create new setlist with file name
+        const setName = file.name.replace('.txt', '');
+        createSetlist(setName);
+        
+        // Process each line
+        lines.forEach(line => {
+          const song = parseSongLine(line);
+          if (song) {
+            // Add to song library if it doesn't exist
+            addSongToLibrary(song);
+            // Add to current setlist
+            addSongToSetlist(song);
+          }
+        });
+      };
+      reader.readAsText(file);
+    }
+
+    // Import button click handler
+    importSetlist.addEventListener('click', () => {
+      importFile.click();
+    });
+
+    // File selection handler
+    importFile.addEventListener('change', (e) => {
+      const file = e.target.files[0];
+      if (file) {
+        importSongList(file);
+      }
+      // Reset file input
+      e.target.value = '';
+    });
   </script>
 </body>
 
