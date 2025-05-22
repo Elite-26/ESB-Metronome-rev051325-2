@@ -888,6 +888,18 @@
 
       // Update the select option value
       songSelect.options[songSelect.selectedIndex].value = bpmInput.value;
+
+      // Add visual feedback
+      const saveButton = document.getElementById('save-bpm');
+      const originalText = saveButton.innerHTML;
+      saveButton.innerHTML = '✓ Saved!';
+      saveButton.style.backgroundColor = '#45a049';
+      
+      // Reset button after 1.5 seconds
+      setTimeout(() => {
+        saveButton.innerHTML = originalText;
+        saveButton.style.backgroundColor = '#2196F3';
+      }, 1500);
     }
 
     // Load saved BPM values when page loads
@@ -961,8 +973,7 @@
     function addSongToSetlist(song) {
       const selectedSetlistId = setlistSelect.value;
       if (!selectedSetlistId) {
-        alert('Please select a setlist first');
-        return;
+        return; // Silently return if no setlist is selected
       }
 
       const savedSetlists = localStorage.getItem('setlists');
