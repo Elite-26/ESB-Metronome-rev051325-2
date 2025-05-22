@@ -1,0 +1,690 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black">
+  <meta name="apple-mobile-web-app-title" content="ESB Metronome">
+  <link rel="manifest" href="manifest.json">
+  <link rel="apple-touch-icon" href="icon-192.png">
+  <title>ESB Metronome</title>
+  <style>
+    body {
+      background-color: #222;
+      color: white;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      text-align: center;
+      padding: 40px 20px;
+      -webkit-tap-highlight-color: transparent;
+      -webkit-touch-callout: none;
+      -webkit-user-select: none;
+      user-select: none;
+      max-width: 800px;
+      margin: 0 auto;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      min-height: 100vh;
+      box-sizing: border-box;
+    }
+
+    .container {
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 20px;
+    }
+
+    .logo {
+      max-width: 200px;
+      height: auto;
+      margin-bottom: 30px;
+    }
+
+    select, button, input[type="range"] {
+      font-size: 18px;
+      padding: 12px;
+      margin: 8px 0;
+      -webkit-appearance: none;
+      appearance: none;
+      border-radius: 8px;
+      border: none;
+      background-color: #444;
+      color: white;
+      width: 100%;
+      max-width: 400px;
+    }
+
+    button {
+      background-color: #4CAF50;
+      width: 140px;
+      height: 48px;
+      cursor: pointer;
+      margin: 20px 0;
+      padding: 0;
+      font-size: 16px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 5px;
+      border: none;
+      border-radius: 8px;
+    }
+
+    .sound-toggle {
+      background-color: #666;
+      margin-left: 10px;
+    }
+
+    .sound-toggle.active {
+      background-color: #4CAF50;
+    }
+
+    .button-group {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 10px;
+    }
+
+    button:active {
+      background-color: #45a049;
+    }
+
+    input[type="range"] {
+      height: 8px;
+      background: #444;
+      border-radius: 4px;
+      padding: 0;
+      margin: 15px 0;
+    }
+
+    input[type="range"]::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      width: 24px;
+      height: 24px;
+      background: #4CAF50;
+      border-radius: 50%;
+      cursor: pointer;
+    }
+
+    .beat-lights-container {
+      display: flex;
+      justify-content: center;
+      gap: 15px;
+      margin-top: 30px;
+      flex-wrap: wrap;
+    }
+
+    .beat-light {
+      display: inline-block;
+      width: 60px;
+      height: 60px;
+      border-radius: 50%;
+      background-color: #90ee90;
+      transition: background-color 0.2s ease;
+    }
+
+    label {
+      display: block;
+      margin: 10px 0;
+      font-size: 18px;
+    }
+
+    .bright {
+      background-color: #ffffff !important;
+      animation: none !important;
+    }
+
+    .pulse {
+      animation: pulse 0.6s infinite alternate;
+    }
+
+    @keyframes pulse {
+      from { opacity: 0.5; }
+      to { opacity: 1; }
+    }
+
+    @media (max-width: 768px) {
+      body {
+        padding: 20px 15px;
+      }
+      
+      .logo {
+        max-width: 150px;
+        margin-bottom: 20px;
+      }
+
+      select, input[type="range"] {
+        width: 100%;
+        max-width: 300px;
+      }
+
+      .beat-light {
+        width: 50px;
+        height: 50px;
+      }
+    }
+
+    .song-management, .setlist-management {
+      width: 100%;
+      max-width: 600px;
+      margin: 20px 0;
+      padding: 20px;
+      background-color: #333;
+      border-radius: 12px;
+    }
+
+    .input-field {
+      width: 100%;
+      padding: 10px;
+      margin: 5px 0;
+      border-radius: 6px;
+      border: 1px solid #555;
+      background-color: #444;
+      color: white;
+    }
+
+    .action-btn {
+      background-color: #4CAF50;
+      color: white;
+      padding: 10px 20px;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      margin: 5px;
+    }
+
+    .setlist-item {
+      background-color: #444;
+      padding: 15px;
+      margin: 10px 0;
+      border-radius: 8px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .setlist-songs {
+      margin-top: 10px;
+      padding: 10px;
+      background-color: #555;
+      border-radius: 6px;
+    }
+
+    .song-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 5px;
+      margin: 5px 0;
+      background-color: #666;
+      border-radius: 4px;
+    }
+
+    .drag-handle {
+      cursor: move;
+      padding: 0 10px;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <img src="images/esb-logo.png" alt="ESB Logo" class="logo">
+
+    <!-- Song Management Section -->
+    <div class="song-management">
+      <h2>Song Library</h2>
+      <div class="add-song-form">
+        <input type="text" id="new-song-name" placeholder="Song Name" class="input-field">
+        <input type="number" id="new-song-bpm" placeholder="BPM" class="input-field">
+        <input type="text" id="new-song-artist" placeholder="Artist Name" class="input-field">
+        <button id="add-song-btn" class="action-btn">Add Song</button>
+      </div>
+    </div>
+
+    <!-- Setlist Management Section -->
+    <div class="setlist-management">
+      <h2>Setlists</h2>
+      <div class="setlist-controls">
+        <input type="text" id="new-setlist-name" placeholder="New Setlist Name" class="input-field">
+        <button id="create-setlist-btn" class="action-btn">Create Setlist</button>
+      </div>
+      <div id="setlist-container"></div>
+    </div>
+
+    <label for="song-select">Choose a Song:</label>
+    <select id="song-select">
+      <option value="">-- Select a song --</option>
+    </select>
+
+    <div class="bpm-controls">
+      <label for="bpm">BPM: <span id="bpm-value">120</span></label>
+      <input type="range" id="bpm" min="40" max="208" value="120">
+      <button id="save-bpm-btn" class="action-btn">Save BPM</button>
+    </div>
+
+    <div class="button-group">
+      <button id="start-stop">Start</button>
+      <button id="sound-toggle" class="sound-toggle active">Sound On</button>
+    </div>
+
+    <div class="beat-lights-container">
+      <div class="beat-light"></div>
+      <div class="beat-light"></div>
+      <div class="beat-light"></div>
+      <div class="beat-light"></div>
+    </div>
+  </div>
+
+  <script>
+    // Audio context and oscillator setup
+    let audioContext;
+    let clickBuffer;
+    let isSoundEnabled = false;
+
+    // Initialize audio
+    async function initAudio() {
+      try {
+        audioContext = new (window.AudioContext || window.webkitAudioContext)();
+        
+        // Create a simple click sound
+        const sampleRate = audioContext.sampleRate;
+        const duration = 0.05; // 50ms click
+        const buffer = audioContext.createBuffer(1, sampleRate * duration, sampleRate);
+        const data = buffer.getChannelData(0);
+        
+        // Create a click sound with a quick attack and decay
+        for (let i = 0; i < buffer.length; i++) {
+          const t = i / sampleRate;
+          data[i] = Math.sin(2 * Math.PI * 1000 * t) * Math.exp(-t * 50);
+        }
+        
+        clickBuffer = buffer;
+      } catch (error) {
+        console.error('Error initializing audio:', error);
+        isSoundEnabled = false;
+        document.getElementById('sound-toggle').disabled = true;
+      }
+    }
+
+    // Play click sound
+    function playClick() {
+      if (!isSoundEnabled || !audioContext || !clickBuffer) return;
+      
+      const source = audioContext.createBufferSource();
+      source.buffer = clickBuffer;
+      source.connect(audioContext.destination);
+      source.start();
+    }
+
+    // Register service worker for offline functionality
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', () => {
+        navigator.serviceWorker.register('/sw.js', { scope: '/' })
+          .then(registration => {
+            console.log('ServiceWorker registration successful');
+            // Check for updates
+            registration.update();
+          })
+          .catch(err => {
+            console.log('ServiceWorker registration failed: ', err);
+          });
+      });
+    }
+
+    // Prevent zooming on double tap
+    document.addEventListener('touchstart', function(event) {
+      if (event.touches.length > 1) {
+        event.preventDefault();
+      }
+    }, { passive: false });
+
+    let lastTouchEnd = 0;
+    document.addEventListener('touchend', function(event) {
+      const now = (new Date()).getTime();
+      if (now - lastTouchEnd <= 300) {
+        event.preventDefault();
+      }
+      lastTouchEnd = now;
+    }, false);
+
+    const bpmInput = document.getElementById('bpm');
+    const bpmDisplay = document.getElementById('bpm-value');
+    const startStopButton = document.getElementById('start-stop');
+    const songSelect = document.getElementById('song-select');
+    const soundToggleButton = document.getElementById('sound-toggle');
+
+    let isRunning = false;
+    let interval;
+    let currentBeat = 0;
+    const beatCount = 4;
+    const lights = [
+      document.getElementById('light-0'),
+      document.getElementById('light-1'),
+      document.getElementById('light-2'),
+      document.getElementById('light-3')
+    ];
+
+    function flashBeat(index) {
+      lights.forEach((light, i) => {
+        light.classList.remove('bright', 'pulse');
+        if (i === index) {
+          light.classList.add(i === 0 ? 'bright' : 'pulse');
+        }
+      });
+      if (isSoundEnabled) {
+        playClick();
+      }
+    }
+
+    function startMetronome() {
+      const bpm = parseInt(bpmInput.value);
+      const intervalTime = 60000 / bpm;
+      interval = setInterval(() => {
+        flashBeat(currentBeat);
+        currentBeat = (currentBeat + 1) % beatCount;
+      }, intervalTime);
+      isRunning = true;
+      startStopButton.textContent = 'Stop';
+    }
+
+    function stopMetronome() {
+      clearInterval(interval);
+      isRunning = false;
+      currentBeat = 0;
+      lights.forEach(light => light.classList.remove('bright', 'pulse'));
+      startStopButton.textContent = 'Start';
+    }
+
+    // Initialize audio when user interacts with the page
+    document.addEventListener('click', () => {
+      if (!audioContext) {
+        initAudio();
+      }
+    }, { once: true });
+
+    // Sound toggle functionality
+    soundToggleButton.addEventListener('click', () => {
+      isSoundEnabled = !isSoundEnabled;
+      soundToggleButton.textContent = isSoundEnabled ? '🔊 Sound' : '🔇 Sound';
+      soundToggleButton.classList.toggle('active', isSoundEnabled);
+    });
+
+    bpmInput.addEventListener('input', () => {
+      bpmDisplay.textContent = bpmInput.value;
+      if (isRunning) {
+        stopMetronome();
+        startMetronome();
+      }
+    });
+
+    songSelect.addEventListener('change', () => {
+      const selectedBpm = songSelect.value;
+      if (selectedBpm) {
+        bpmInput.value = selectedBpm;
+        bpmDisplay.textContent = selectedBpm;
+        if (isRunning) {
+          stopMetronome();
+          startMetronome();
+        }
+      }
+    });
+
+    startStopButton.addEventListener('click', () => {
+      isRunning ? stopMetronome() : startMetronome();
+    });
+
+    // Song and Setlist Management
+    let songs = [];
+    let setlists = [];
+    const MAX_SETLISTS = 5;
+
+    // Load saved data from localStorage
+    function loadSavedData() {
+      const savedSongs = localStorage.getItem('songs');
+      const savedSetlists = localStorage.getItem('setlists');
+      
+      if (savedSongs) {
+        songs = JSON.parse(savedSongs);
+        updateSongSelect();
+      }
+      
+      if (savedSetlists) {
+        setlists = JSON.parse(savedSetlists);
+        updateSetlistDisplay();
+      }
+    }
+
+    // Save data to localStorage
+    function saveData() {
+      localStorage.setItem('songs', JSON.stringify(songs));
+      localStorage.setItem('setlists', JSON.stringify(setlists));
+    }
+
+    // Add new song
+    document.getElementById('add-song-btn').addEventListener('click', () => {
+      const name = document.getElementById('new-song-name').value;
+      const bpm = parseInt(document.getElementById('new-song-bpm').value);
+      const artist = document.getElementById('new-song-artist').value;
+
+      if (name && bpm && artist) {
+        songs.push({ name, bpm, artist });
+        songs.sort((a, b) => a.name.localeCompare(b.name));
+        saveData();
+        updateSongSelect();
+        
+        // Clear inputs
+        document.getElementById('new-song-name').value = '';
+        document.getElementById('new-song-bpm').value = '';
+        document.getElementById('new-song-artist').value = '';
+      }
+    });
+
+    // Create new setlist
+    document.getElementById('create-setlist-btn').addEventListener('click', () => {
+      const name = document.getElementById('new-setlist-name').value;
+      
+      if (name && setlists.length < MAX_SETLISTS) {
+        setlists.push({
+          name,
+          songs: []
+        });
+        saveData();
+        updateSetlistDisplay();
+        document.getElementById('new-setlist-name').value = '';
+      }
+    });
+
+    // Update song select dropdown
+    function updateSongSelect() {
+      const select = document.getElementById('song-select');
+      select.innerHTML = '<option value="">-- Select a song --</option>';
+      
+      // Group songs by first letter
+      const groups = {};
+      songs.forEach(song => {
+        const firstLetter = song.name[0].toUpperCase();
+        if (!groups[firstLetter]) {
+          groups[firstLetter] = [];
+        }
+        groups[firstLetter].push(song);
+      });
+
+      // Create optgroups
+      Object.keys(groups).sort().forEach(letter => {
+        const optgroup = document.createElement('optgroup');
+        optgroup.label = letter;
+        
+        groups[letter].forEach(song => {
+          const option = document.createElement('option');
+          option.value = song.bpm;
+          option.textContent = `${song.name} - ${song.artist} (${song.bpm} BPM)`;
+          optgroup.appendChild(option);
+        });
+        
+        select.appendChild(optgroup);
+      });
+    }
+
+    // Update setlist display
+    function updateSetlistDisplay() {
+      const container = document.getElementById('setlist-container');
+      container.innerHTML = '';
+
+      setlists.forEach((setlist, index) => {
+        const setlistDiv = document.createElement('div');
+        setlistDiv.className = 'setlist-item';
+        
+        const header = document.createElement('div');
+        header.innerHTML = `
+          <h3>${setlist.name}</h3>
+          <button onclick="exportSetlist(${index})" class="action-btn">Export</button>
+          <button onclick="deleteSetlist(${index})" class="action-btn">Delete</button>
+        `;
+        
+        const songsDiv = document.createElement('div');
+        songsDiv.className = 'setlist-songs';
+        songsDiv.id = `setlist-songs-${index}`;
+        
+        setlist.songs.forEach((song, songIndex) => {
+          const songDiv = document.createElement('div');
+          songDiv.className = 'song-item';
+          songDiv.innerHTML = `
+            <span class="drag-handle">⋮⋮</span>
+            <span>${song.name} - ${song.artist} (${song.bpm} BPM)</span>
+            <button onclick="removeSongFromSetlist(${index}, ${songIndex})" class="action-btn">Remove</button>
+          `;
+          songsDiv.appendChild(songDiv);
+        });
+        
+        setlistDiv.appendChild(header);
+        setlistDiv.appendChild(songsDiv);
+        container.appendChild(setlistDiv);
+      });
+
+      // Initialize drag and drop
+      initializeDragAndDrop();
+    }
+
+    // Add song to setlist
+    function addSongToSetlist(setlistIndex) {
+      const select = document.getElementById('song-select');
+      const selectedOption = select.options[select.selectedIndex];
+      
+      if (selectedOption.value) {
+        const songName = selectedOption.text.split(' - ')[0];
+        const song = songs.find(s => s.name === songName);
+        
+        if (song && !setlists[setlistIndex].songs.some(s => s.name === song.name)) {
+          setlists[setlistIndex].songs.push(song);
+          saveData();
+          updateSetlistDisplay();
+        }
+      }
+    }
+
+    // Remove song from setlist
+    function removeSongFromSetlist(setlistIndex, songIndex) {
+      setlists[setlistIndex].songs.splice(songIndex, 1);
+      saveData();
+      updateSetlistDisplay();
+    }
+
+    // Delete setlist
+    function deleteSetlist(index) {
+      setlists.splice(index, 1);
+      saveData();
+      updateSetlistDisplay();
+    }
+
+    // Export setlist
+    function exportSetlist(index) {
+      const setlist = setlists[index];
+      const content = setlist.songs.map(song => 
+        `${song.name} - ${song.artist} (${song.bpm} BPM)`
+      ).join('\n');
+      
+      const blob = new Blob([content], { type: 'text/plain' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `${setlist.name}.txt`;
+      a.click();
+      URL.revokeObjectURL(url);
+    }
+
+    // Import songs
+    function importSongs(file) {
+      const reader = new FileReader();
+      reader.onload = function(e) {
+        const content = e.target.result;
+        const lines = content.split('\n');
+        
+        lines.forEach(line => {
+          const match = line.match(/(.*?) - (.*?) \((\d+) BPM\)/);
+          if (match) {
+            const [_, name, artist, bpm] = match;
+            if (!songs.some(s => s.name === name)) {
+              songs.push({
+                name: name.trim(),
+                artist: artist.trim(),
+                bpm: parseInt(bpm)
+              });
+            }
+          }
+        });
+        
+        songs.sort((a, b) => a.name.localeCompare(b.name));
+        saveData();
+        updateSongSelect();
+      };
+      reader.readAsText(file);
+    }
+
+    // Initialize drag and drop
+    function initializeDragAndDrop() {
+      const setlistContainers = document.querySelectorAll('.setlist-songs');
+      
+      setlistContainers.forEach((container, setlistIndex) => {
+        new Sortable(container, {
+          animation: 150,
+          handle: '.drag-handle',
+          onEnd: function(evt) {
+            const songs = setlists[setlistIndex].songs;
+            const item = songs.splice(evt.oldIndex, 1)[0];
+            songs.splice(evt.newIndex, 0, item);
+            saveData();
+          }
+        });
+      });
+    }
+
+    // Save BPM for selected song
+    document.getElementById('save-bpm-btn').addEventListener('click', () => {
+      const select = document.getElementById('song-select');
+      const selectedOption = select.options[select.selectedIndex];
+      const newBpm = parseInt(document.getElementById('bpm').value);
+      
+      if (selectedOption.value) {
+        const songName = selectedOption.text.split(' - ')[0];
+        const songIndex = songs.findIndex(s => s.name === songName);
+        
+        if (songIndex !== -1) {
+          songs[songIndex].bpm = newBpm;
+          saveData();
+          updateSongSelect();
+        }
+      }
+    });
+
+    // Load saved data on startup
+    loadSavedData();
+  </script>
+
+  <!-- Add Sortable.js for drag and drop functionality -->
+  <script src="https://cdn.jsdelivr.net/npm/sortablejs@1.14.0/Sortable.min.js"></script>
+</body>
+</html>
