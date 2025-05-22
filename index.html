@@ -167,115 +167,159 @@
         height: 50px;
       }
     }
-
-    .song-management, .setlist-management {
-      width: 100%;
-      max-width: 600px;
-      margin: 20px 0;
-      padding: 20px;
-      background-color: #333;
-      border-radius: 12px;
-    }
-
-    .input-field {
-      width: 100%;
-      padding: 10px;
-      margin: 5px 0;
-      border-radius: 6px;
-      border: 1px solid #555;
-      background-color: #444;
-      color: white;
-    }
-
-    .action-btn {
-      background-color: #4CAF50;
-      color: white;
-      padding: 10px 20px;
-      border: none;
-      border-radius: 6px;
-      cursor: pointer;
-      margin: 5px;
-    }
-
-    .setlist-item {
-      background-color: #444;
-      padding: 15px;
-      margin: 10px 0;
-      border-radius: 8px;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-    }
-
-    .setlist-songs {
-      margin-top: 10px;
-      padding: 10px;
-      background-color: #555;
-      border-radius: 6px;
-    }
-
-    .song-item {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      padding: 5px;
-      margin: 5px 0;
-      background-color: #666;
-      border-radius: 4px;
-    }
-
-    .drag-handle {
-      cursor: move;
-      padding: 0 10px;
-    }
   </style>
 </head>
 <body>
   <div class="container">
     <img src="images/esb-logo.png" alt="ESB Logo" class="logo">
 
-    <!-- Song Management Section -->
-    <div class="song-management">
-      <h2>Song Library</h2>
-      <div class="add-song-form">
-        <input type="text" id="new-song-name" placeholder="Song Name" class="input-field">
-        <input type="number" id="new-song-bpm" placeholder="BPM" class="input-field">
-        <input type="text" id="new-song-artist" placeholder="Artist Name" class="input-field">
-        <button id="add-song-btn" class="action-btn">Add Song</button>
-      </div>
-    </div>
-
-    <!-- Setlist Management Section -->
-    <div class="setlist-management">
-      <h2>Setlists</h2>
-      <div class="setlist-controls">
-        <input type="text" id="new-setlist-name" placeholder="New Setlist Name" class="input-field">
-        <button id="create-setlist-btn" class="action-btn">Create Setlist</button>
-      </div>
-      <div id="setlist-container"></div>
-    </div>
-
     <label for="song-select">Choose a Song:</label>
     <select id="song-select">
       <option value="">-- Select a song --</option>
+      
+      <optgroup label="A">
+        <option value="130">Ain't No Mountain High Enough</option>
+        <option value="124">Ain't Too Proud to Beg</option>
+        <option value="115">American Girl</option>
+        <option value="150">Autumn Leaves</option>
+      </optgroup>
+
+      <optgroup label="B">
+        <option value="119">Billie Jean</option>
+        <option value="116">Blame It on the Boogie</option>
+        <option value="129">Blue Bossa</option>
+        <option value="108">Brick House</option>
+        <option value="148">Brown Eyed Girl</option>
+        <option value="132">Boogie Shoes</option>
+        <option value="116">Bust a Move</option>
+      </optgroup>
+
+      <optgroup label="C">
+        <option value="113">Can't Stop the Feeling!</option>
+        <option value="150">Crocodile Rock</option>
+        <option value="135">Crazy Train</option>
+      </optgroup>
+
+      <optgroup label="D">
+        <option value="119">Dance With Somebody</option>
+        <option value="126">Dancing in the Street</option>
+        <option value="104">December 1963 (Oh What a Night)</option>
+        <option value="132">Disco Inferno</option>
+        <option value="124">Don't Start Now</option>
+        <option value="119">Don't Stop Believin'</option>
+        <option value="122">Drive My Car</option>
+        <option value="120">Dynamite</option>
+      </optgroup>
+
+      <optgroup label="F">
+        <option value="132">Five Hundred Miles-500 Miles)</option>
+      </optgroup>
+
+      <optgroup label="G">
+        <option value="123">Give It To Me Baby</option>
+        <option value="113">Get Down Tonight</option>
+        <option value="129">Girl from Ipanema</option>
+        <option value="105">Go Around In Circles</option>
+      </optgroup>
+
+      <optgroup label="H">
+        <option value="110">Hold On, I'm Comin'</option>
+        <option value="119">Hot Hot Hot</option>
+      </optgroup>
+
+      <optgroup label="I">
+        <option value="90">I'll Be There</option>
+        <option value="108">I Wish</option>
+        <option value="118">I Will Survive</option>
+        <option value="128">I Gotta Feeling</option>
+        <option value="115">It's Not Unusual</option>
+      </optgroup>
+
+      <optgroup label="J">
+        <option value="129">Jump</option>
+        <option value="93">Just My Imagination</option>
+        <option value="120">Juice</option>
+        <option value="111">Jumpin' Jack Flash</option>
+      </optgroup>
+
+      <optgroup label="K">
+        <option value="111">Kiss</option>
+      </optgroup>
+
+      <optgroup label="L">
+        <option value="120">Le Freak</option>
+        <option value="102">Let's Stay Together</option>
+        <option value="134">Love Shack</option>
+      </optgroup>
+
+      <optgroup label="M">
+        <option value="108">My Girl</option>
+        <option value="136">Mony Mony</option>
+        <option value="148">Mr. Brightside</option>
+      </optgroup>
+
+      <optgroup label="O">
+        <option value="122">Old Time Rock and Roll</option>
+        <option value="104">Ob-La-Di, Ob-La-Da</option>
+      </optgroup>
+
+      <optgroup label="P">
+        <option value="120">Power of Love</option>
+        <option value="110">Play That Funky Music</option>
+        <option value="104">Put a Little Love in Your Heart</option>
+        <option value="121">Proud Mary</option>
+      </optgroup>
+
+      <optgroup label="R">
+        <option value="115">Respect</option>
+      </optgroup>
+
+      <optgroup label="S">
+        <option value="134">Shake Your Groove Thing</option>
+        <option value="119">Shake Your Body (Down to the Ground)</option>
+        <option value="128">Shut Up and Dance</option>
+        <option value="108">Signed, Sealed, Delivered</option>
+        <option value="139">Summer of '69</option>
+        <option value="127">Sweet Caroline</option>
+      </optgroup>
+
+      <optgroup label="T">
+        <option value="104">This Is How We Do It</option>
+        <option value="128">Twist and Shout</option>
+      </optgroup>
+
+      <optgroup label="U">
+        <option value="115">Uptown Funk</option>
+      </optgroup>
+
+      <optgroup label="V">
+        <option value="108">Valerie</option>
+      </optgroup>
+
+      <optgroup label="W">
+        <option value="121">We Are Family</option>
+        <option value="152">We Got the Beat</option>
+        <option value="112">Wherever You Will Go</option>
+      </optgroup>
+
+      <optgroup label="Y">
+        <option value="108">You Sexy Thing</option>
+        <option value="108">You're the One That I Want</option>
+      </optgroup>
     </select>
 
-    <div class="bpm-controls">
-      <label for="bpm">BPM: <span id="bpm-value">120</span></label>
-      <input type="range" id="bpm" min="40" max="208" value="120">
-      <button id="save-bpm-btn" class="action-btn">Save BPM</button>
-    </div>
-
+    <label>BPM: <span id="bpm-display">120</span></label>
+    <input type="range" id="bpm" min="40" max="240" value="120">
     <div class="button-group">
       <button id="start-stop">Start</button>
-      <button id="sound-toggle" class="sound-toggle active">Sound On</button>
+      <button id="sound-toggle" class="sound-toggle">🔇 Sound</button>
     </div>
 
     <div class="beat-lights-container">
-      <div class="beat-light"></div>
-      <div class="beat-light"></div>
-      <div class="beat-light"></div>
-      <div class="beat-light"></div>
+      <div class="beat-light" id="light-0"></div>
+      <div class="beat-light" id="light-1"></div>
+      <div class="beat-light" id="light-2"></div>
+      <div class="beat-light" id="light-3"></div>
     </div>
   </div>
 
@@ -352,7 +396,7 @@
     }, false);
 
     const bpmInput = document.getElementById('bpm');
-    const bpmDisplay = document.getElementById('bpm-value');
+    const bpmDisplay = document.getElementById('bpm-display');
     const startStopButton = document.getElementById('start-stop');
     const songSelect = document.getElementById('song-select');
     const soundToggleButton = document.getElementById('sound-toggle');
@@ -436,255 +480,6 @@
     startStopButton.addEventListener('click', () => {
       isRunning ? stopMetronome() : startMetronome();
     });
-
-    // Song and Setlist Management
-    let songs = [];
-    let setlists = [];
-    const MAX_SETLISTS = 5;
-
-    // Load saved data from localStorage
-    function loadSavedData() {
-      const savedSongs = localStorage.getItem('songs');
-      const savedSetlists = localStorage.getItem('setlists');
-      
-      if (savedSongs) {
-        songs = JSON.parse(savedSongs);
-        updateSongSelect();
-      }
-      
-      if (savedSetlists) {
-        setlists = JSON.parse(savedSetlists);
-        updateSetlistDisplay();
-      }
-    }
-
-    // Save data to localStorage
-    function saveData() {
-      localStorage.setItem('songs', JSON.stringify(songs));
-      localStorage.setItem('setlists', JSON.stringify(setlists));
-    }
-
-    // Add new song
-    document.getElementById('add-song-btn').addEventListener('click', () => {
-      const name = document.getElementById('new-song-name').value;
-      const bpm = parseInt(document.getElementById('new-song-bpm').value);
-      const artist = document.getElementById('new-song-artist').value;
-
-      if (name && bpm && artist) {
-        songs.push({ name, bpm, artist });
-        songs.sort((a, b) => a.name.localeCompare(b.name));
-        saveData();
-        updateSongSelect();
-        
-        // Clear inputs
-        document.getElementById('new-song-name').value = '';
-        document.getElementById('new-song-bpm').value = '';
-        document.getElementById('new-song-artist').value = '';
-      }
-    });
-
-    // Create new setlist
-    document.getElementById('create-setlist-btn').addEventListener('click', () => {
-      const name = document.getElementById('new-setlist-name').value;
-      
-      if (name && setlists.length < MAX_SETLISTS) {
-        setlists.push({
-          name,
-          songs: []
-        });
-        saveData();
-        updateSetlistDisplay();
-        document.getElementById('new-setlist-name').value = '';
-      }
-    });
-
-    // Update song select dropdown
-    function updateSongSelect() {
-      const select = document.getElementById('song-select');
-      select.innerHTML = '<option value="">-- Select a song --</option>';
-      
-      // Group songs by first letter
-      const groups = {};
-      songs.forEach(song => {
-        const firstLetter = song.name[0].toUpperCase();
-        if (!groups[firstLetter]) {
-          groups[firstLetter] = [];
-        }
-        groups[firstLetter].push(song);
-      });
-
-      // Create optgroups
-      Object.keys(groups).sort().forEach(letter => {
-        const optgroup = document.createElement('optgroup');
-        optgroup.label = letter;
-        
-        groups[letter].forEach(song => {
-          const option = document.createElement('option');
-          option.value = song.bpm;
-          option.textContent = `${song.name} - ${song.artist} (${song.bpm} BPM)`;
-          optgroup.appendChild(option);
-        });
-        
-        select.appendChild(optgroup);
-      });
-    }
-
-    // Update setlist display
-    function updateSetlistDisplay() {
-      const container = document.getElementById('setlist-container');
-      container.innerHTML = '';
-
-      setlists.forEach((setlist, index) => {
-        const setlistDiv = document.createElement('div');
-        setlistDiv.className = 'setlist-item';
-        
-        const header = document.createElement('div');
-        header.innerHTML = `
-          <h3>${setlist.name}</h3>
-          <button onclick="exportSetlist(${index})" class="action-btn">Export</button>
-          <button onclick="deleteSetlist(${index})" class="action-btn">Delete</button>
-        `;
-        
-        const songsDiv = document.createElement('div');
-        songsDiv.className = 'setlist-songs';
-        songsDiv.id = `setlist-songs-${index}`;
-        
-        setlist.songs.forEach((song, songIndex) => {
-          const songDiv = document.createElement('div');
-          songDiv.className = 'song-item';
-          songDiv.innerHTML = `
-            <span class="drag-handle">⋮⋮</span>
-            <span>${song.name} - ${song.artist} (${song.bpm} BPM)</span>
-            <button onclick="removeSongFromSetlist(${index}, ${songIndex})" class="action-btn">Remove</button>
-          `;
-          songsDiv.appendChild(songDiv);
-        });
-        
-        setlistDiv.appendChild(header);
-        setlistDiv.appendChild(songsDiv);
-        container.appendChild(setlistDiv);
-      });
-
-      // Initialize drag and drop
-      initializeDragAndDrop();
-    }
-
-    // Add song to setlist
-    function addSongToSetlist(setlistIndex) {
-      const select = document.getElementById('song-select');
-      const selectedOption = select.options[select.selectedIndex];
-      
-      if (selectedOption.value) {
-        const songName = selectedOption.text.split(' - ')[0];
-        const song = songs.find(s => s.name === songName);
-        
-        if (song && !setlists[setlistIndex].songs.some(s => s.name === song.name)) {
-          setlists[setlistIndex].songs.push(song);
-          saveData();
-          updateSetlistDisplay();
-        }
-      }
-    }
-
-    // Remove song from setlist
-    function removeSongFromSetlist(setlistIndex, songIndex) {
-      setlists[setlistIndex].songs.splice(songIndex, 1);
-      saveData();
-      updateSetlistDisplay();
-    }
-
-    // Delete setlist
-    function deleteSetlist(index) {
-      setlists.splice(index, 1);
-      saveData();
-      updateSetlistDisplay();
-    }
-
-    // Export setlist
-    function exportSetlist(index) {
-      const setlist = setlists[index];
-      const content = setlist.songs.map(song => 
-        `${song.name} - ${song.artist} (${song.bpm} BPM)`
-      ).join('\n');
-      
-      const blob = new Blob([content], { type: 'text/plain' });
-      const url = URL.createObjectURL(blob);
-      const a = document.createElement('a');
-      a.href = url;
-      a.download = `${setlist.name}.txt`;
-      a.click();
-      URL.revokeObjectURL(url);
-    }
-
-    // Import songs
-    function importSongs(file) {
-      const reader = new FileReader();
-      reader.onload = function(e) {
-        const content = e.target.result;
-        const lines = content.split('\n');
-        
-        lines.forEach(line => {
-          const match = line.match(/(.*?) - (.*?) \((\d+) BPM\)/);
-          if (match) {
-            const [_, name, artist, bpm] = match;
-            if (!songs.some(s => s.name === name)) {
-              songs.push({
-                name: name.trim(),
-                artist: artist.trim(),
-                bpm: parseInt(bpm)
-              });
-            }
-          }
-        });
-        
-        songs.sort((a, b) => a.name.localeCompare(b.name));
-        saveData();
-        updateSongSelect();
-      };
-      reader.readAsText(file);
-    }
-
-    // Initialize drag and drop
-    function initializeDragAndDrop() {
-      const setlistContainers = document.querySelectorAll('.setlist-songs');
-      
-      setlistContainers.forEach((container, setlistIndex) => {
-        new Sortable(container, {
-          animation: 150,
-          handle: '.drag-handle',
-          onEnd: function(evt) {
-            const songs = setlists[setlistIndex].songs;
-            const item = songs.splice(evt.oldIndex, 1)[0];
-            songs.splice(evt.newIndex, 0, item);
-            saveData();
-          }
-        });
-      });
-    }
-
-    // Save BPM for selected song
-    document.getElementById('save-bpm-btn').addEventListener('click', () => {
-      const select = document.getElementById('song-select');
-      const selectedOption = select.options[select.selectedIndex];
-      const newBpm = parseInt(document.getElementById('bpm').value);
-      
-      if (selectedOption.value) {
-        const songName = selectedOption.text.split(' - ')[0];
-        const songIndex = songs.findIndex(s => s.name === songName);
-        
-        if (songIndex !== -1) {
-          songs[songIndex].bpm = newBpm;
-          saveData();
-          updateSongSelect();
-        }
-      }
-    });
-
-    // Load saved data on startup
-    loadSavedData();
   </script>
-
-  <!-- Add Sortable.js for drag and drop functionality -->
-  <script src="https://cdn.jsdelivr.net/npm/sortablejs@1.14.0/Sortable.min.js"></script>
 </body>
 </html>
