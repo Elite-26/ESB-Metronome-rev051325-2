@@ -175,11 +175,61 @@
         height: 50px;
       }
     }
+
+    .add-song-button {
+      background-color: #FF9800;
+      margin-bottom: 20px;
+    }
+
+    .add-song-button:hover {
+      background-color: #F57C00;
+    }
+
+    .add-song-form {
+      background-color: #333;
+      padding: 20px;
+      border-radius: 8px;
+      margin: 20px 0;
+      width: 100%;
+      max-width: 400px;
+    }
+
+    .form-input {
+      /* width: 100%; */
+      width: 290px;
+      padding: 12px;
+      margin: 8px 0;
+      border: none;
+      border-radius: 8px;
+      background-color: #444;
+      color: white;
+      font-size: 16px;
+    }
+
+    .submit-button {
+      background-color: #4CAF50;
+    }
+
+    .cancel-button {
+      background-color: #f44336;
+    }
   </style>
 </head>
 <body>
   <div class="container">
     <img src="images/esb-logo.png" alt="ESB Logo" class="logo">
+
+    <button id="add-song-toggle" class="add-song-button">Add New Song</button>
+    
+    <div id="add-song-form" class="add-song-form" style="display: none;">
+      <div><input type="text" id="new-song-name" placeholder="Song Name" class="form-input"></div>
+      <div><input type="text" id="new-song-artist" placeholder="Artist Name" class="form-input"></div>
+      <div><input type="number" id="new-song-bpm" placeholder="BPM" min="40" max="240" class="form-input"></div>
+      <div class="button-group">
+        <button id="submit-new-song" class="submit-button">Add Song</button>
+        <button id="cancel-add-song" class="cancel-button">Cancel</button>
+      </div>
+    </div>
 
     <label for="song-select">Choose a Song:</label>
     <select id="song-select">
@@ -410,6 +460,10 @@
     const songSelect = document.getElementById('song-select');
     const soundToggleButton = document.getElementById('sound-toggle');
     const saveBpmButton = document.getElementById('save-bpm');
+    const addSongToggle = document.getElementById('add-song-toggle');
+    const addSongForm = document.getElementById('add-song-form');
+    const submitNewSong = document.getElementById('submit-new-song');
+    const cancelAddSong = document.getElementById('cancel-add-song');
 
     let isRunning = false;
     let interval;
@@ -491,6 +545,98 @@
       isRunning ? stopMetronome() : startMetronome();
     });
   
+    // Load saved songs from localStorage
+    function loadSavedSongs() {
+      const savedSongs = localStorage.getItem('customSongs');
+      if (savedSongs) {
+        const songs = JSON.parse(savedSongs);
+        songs.forEach(song => addSongToSelect(song));
+      }
+    }
+
+    // Add a new song to the select element
+    function addSongToSelect(song) {
+      const { name, artist, bpm } = song;
+      const firstLetter = name.charAt(0).toUpperCase();
+      
+      // Find or create the appropriate optgroup
+      let optgroup = Array.from(songSelect.getElementsByTagName('optgroup'))
+        .find(group => group.label === firstLetter);
+      
+      if (!optgroup) {
+        optgroup = document.createElement('optgroup');
+        optgroup.label = firstLetter;
+        songSelect.appendChild(optgroup);
+      }
+
+      // Create the option element
+      const option = document.createElement('option');
+      option.value = bpm;
+      option.text = `${name} - ${artist}`;
+      option.dataset.artist = artist;
+      
+      // Insert the option in alphabetical order
+      const options = Array.from(optgroup.getElementsByTagName('option'));
+      const insertIndex = options.findIndex(opt => opt.text > option.text);
+      
+      if (insertIndex === -1) {
+        optgroup.appendChild(option);
+      } else {
+        optgroup.insertBefore(option, options[insertIndex]);
+      }
+    }
+
+    // Save a new song
+    function saveNewSong() {
+      const nameInput = document.getElementById('new-song-name');
+      const artistInput = document.getElementById('new-song-artist');
+      const bpmInput = document.getElementById('new-song-bpm');
+
+      const name = nameInput.value.trim();
+      const artist = artistInput.value.trim();
+      const bpm = parseInt(bpmInput.value);
+
+      if (!name || !artist || isNaN(bpm) || bpm < 40 || bpm > 240) {
+        alert('Please fill in all fields correctly. BPM must be between 40 and 240.');
+        return;
+      }
+
+      const song = { name, artist, bpm };
+      
+      // Get existing songs
+      const savedSongs = localStorage.getItem('customSongs');
+      const songs = savedSongs ? JSON.parse(savedSongs) : [];
+      
+      // Add new song
+      songs.push(song);
+      localStorage.setItem('customSongs', JSON.stringify(songs));
+      
+      // Add to select element
+      addSongToSelect(song);
+      
+      // Clear form and hide it
+      nameInput.value = '';
+      artistInput.value = '';
+      bpmInput.value = '';
+      addSongForm.style.display = 'none';
+    }
+
+    // Toggle add song form
+    addSongToggle.addEventListener('click', () => {
+      addSongForm.style.display = addSongForm.style.display === 'none' ? 'block' : 'none';
+    });
+
+    // Handle form submission
+    submitNewSong.addEventListener('click', saveNewSong);
+
+    // Handle form cancellation
+    cancelAddSong.addEventListener('click', () => {
+      addSongForm.style.display = 'none';
+    });
+
+    // Load saved songs when page loads
+    loadSavedSongs();
+
     // Load saved BPM values from localStorage
     function loadSavedBpm() {
       const savedBpm = localStorage.getItem('savedBpm');
