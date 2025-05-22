@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
@@ -43,7 +44,9 @@
       margin-bottom: 30px;
     }
 
-    select, button, input[type="range"] {
+    select,
+    button,
+    input[type="range"] {
       font-size: 18px;
       padding: 12px;
       margin: 8px 0;
@@ -62,7 +65,7 @@
       width: 140px;
       height: 48px;
       cursor: pointer;
-      margin: 20px 0;
+      margin: 10px 0;
       padding: 0;
       font-size: 16px;
       display: flex;
@@ -150,21 +153,27 @@
     }
 
     @keyframes pulse {
-      from { opacity: 0.5; }
-      to { opacity: 1; }
+      from {
+        opacity: 0.5;
+      }
+
+      to {
+        opacity: 1;
+      }
     }
 
     @media (max-width: 768px) {
       body {
         padding: 20px 15px;
       }
-      
+
       .logo {
         max-width: 150px;
         margin-bottom: 20px;
       }
 
-      select, input[type="range"] {
+      select,
+      input[type="range"] {
         width: 100%;
         max-width: 300px;
       }
@@ -186,19 +195,49 @@
         margin: 0 !important;
       }
 
-      .add-song-form {
-        width: 300px !important;
-        padding: 20px;
-      }
-
       .form-input {
         width: 276px !important;
+      }
+
+      .setlist-management {
+        max-width: 300px;
+      }
+
+      .setlist-header {
+        flex-direction: column;
+        gap: 10px;
+      }
+
+      .setlist-actions {
+        width: 100%;
+        flex-direction: column;
+      }
+
+      .setlist-actions button {
+        width: 300px !important;
+      }
+
+      .add-song-button {
+        width: 300px !important;
+      }
+
+      .create-setlist-button {
+        width: 300px !important;
+      }
+
+      .add-song-form {
+        width: 300px !important;
+      }
+
+      .setlist-form {
+        width: 300px !important;
       }
     }
 
     .add-song-button {
       background-color: #FF9800;
       margin-bottom: 20px;
+      width: 400px;
     }
 
     .add-song-button:hover {
@@ -209,8 +248,8 @@
       background-color: #333;
       padding: 20px;
       border-radius: 8px;
-      margin: 20px 0;
       width: 400px;
+      padding: 20px;
     }
 
     .form-input {
@@ -231,14 +270,148 @@
     .cancel-button {
       background-color: #f44336;
     }
+
+    .setlist-management {
+      width: 100%;
+      max-width: 400px;
+      margin-bottom: 20px;
+    }
+
+    .create-setlist-button {
+      background-color: #9C27B0;
+      width: 400px;
+    }
+
+    .create-setlist-button:hover {
+      background-color: #7B1FA2;
+    }
+
+    .setlist-form {
+      background-color: #333;
+      padding: 20px;
+      border-radius: 8px;
+      width: 400px;
+    }
+
+    .setlist-select {
+      width: 100%;
+      margin-bottom: 15px;
+    }
+
+    .active-setlist {
+      background-color: #333;
+      padding: 20px;
+      border-radius: 8px;
+      margin-top: 15px;
+    }
+
+    .setlist-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 15px;
+    }
+
+    .setlist-header h3 {
+      margin: 0;
+      color: white;
+    }
+
+    .setlist-actions {
+      display: flex;
+      gap: 10px;
+    }
+
+    .export-button {
+      background-color: #2196F3;
+    }
+
+    .export-button:hover {
+      background-color: #1976D2;
+    }
+
+    .delete-button {
+      background-color: #f44336;
+    }
+
+    .delete-button:hover {
+      background-color: #d32f2f;
+    }
+
+    .setlist-songs {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .setlist-song {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background-color: #444;
+      padding: 10px;
+      border-radius: 4px;
+    }
+
+    .setlist-song-info {
+      flex-grow: 1;
+    }
+
+    .setlist-song-actions {
+      display: flex;
+      gap: 5px;
+    }
+
+    .move-button {
+      background-color: #666;
+      width: 30px;
+      height: 30px;
+      padding: 0;
+      font-size: 14px;
+    }
+
+    .move-button:hover {
+      background-color: #555;
+    }
   </style>
 </head>
+
 <body>
   <div class="container">
     <img src="images/esb-logo.png" alt="ESB Logo" class="logo">
 
+    <button id="create-setlist-toggle" class="create-setlist-button">Create New Setlist</button>
+
+    <div id="create-setlist-form" class="setlist-form" style="display: none;">
+      <input type="text" id="new-setlist-name" placeholder="Setlist Name" class="form-input">
+      <div class="button-group">
+        <button id="submit-new-setlist" class="submit-button">Create Setlist</button>
+        <button id="cancel-create-setlist" class="cancel-button">Cancel</button>
+      </div>
+    </div>
+
+    <div class="setlist-management">
+
+      <div id="setlist-container" class="setlist-container">
+        <select id="setlist-select" class="setlist-select">
+          <option value="">-- Select a Setlist --</option>
+        </select>
+
+        <div id="active-setlist" class="active-setlist" style="display: none;">
+          <div class="setlist-header">
+            <h3 id="current-setlist-name"></h3>
+            <div class="setlist-actions">
+              <button id="export-setlist" class="export-button">Export Setlist</button>
+              <button id="delete-setlist" class="delete-button">Delete Setlist</button>
+            </div>
+          </div>
+          <div id="setlist-songs" class="setlist-songs"></div>
+        </div>
+      </div>
+    </div>
+
     <button id="add-song-toggle" class="add-song-button">Add New Song</button>
-    
+
     <div id="add-song-form" class="add-song-form" style="display: none;">
       <div><input type="text" id="new-song-name" placeholder="Song Name" class="form-input"></div>
       <div><input type="text" id="new-song-artist" placeholder="Artist Name" class="form-input"></div>
@@ -252,7 +425,7 @@
     <label for="song-select">Choose a Song:</label>
     <select id="song-select">
       <option value="">-- Select a song --</option>
-      
+
       <optgroup label="A">
         <option value="130">Ain't No Mountain High Enough</option>
         <option value="124">Ain't Too Proud to Beg</option>
@@ -410,19 +583,19 @@
     async function initAudio() {
       try {
         audioContext = new (window.AudioContext || window.webkitAudioContext)();
-        
+
         // Create a simple click sound
         const sampleRate = audioContext.sampleRate;
         const duration = 0.05; // 50ms click
         const buffer = audioContext.createBuffer(1, sampleRate * duration, sampleRate);
         const data = buffer.getChannelData(0);
-        
+
         // Create a click sound with a quick attack and decay
         for (let i = 0; i < buffer.length; i++) {
           const t = i / sampleRate;
           data[i] = Math.sin(2 * Math.PI * 1000 * t) * Math.exp(-t * 50);
         }
-        
+
         clickBuffer = buffer;
       } catch (error) {
         console.error('Error initializing audio:', error);
@@ -434,7 +607,7 @@
     // Play click sound
     function playClick() {
       if (!isSoundEnabled || !audioContext || !clickBuffer) return;
-      
+
       const source = audioContext.createBufferSource();
       source.buffer = clickBuffer;
       source.connect(audioContext.destination);
@@ -457,14 +630,14 @@
     }
 
     // Prevent zooming on double tap
-    document.addEventListener('touchstart', function(event) {
+    document.addEventListener('touchstart', function (event) {
       if (event.touches.length > 1) {
         event.preventDefault();
       }
     }, { passive: false });
 
     let lastTouchEnd = 0;
-    document.addEventListener('touchend', function(event) {
+    document.addEventListener('touchend', function (event) {
       const now = (new Date()).getTime();
       if (now - lastTouchEnd <= 300) {
         event.preventDefault();
@@ -482,6 +655,16 @@
     const addSongForm = document.getElementById('add-song-form');
     const submitNewSong = document.getElementById('submit-new-song');
     const cancelAddSong = document.getElementById('cancel-add-song');
+    const createSetlistToggle = document.getElementById('create-setlist-toggle');
+    const createSetlistForm = document.getElementById('create-setlist-form');
+    const submitNewSetlist = document.getElementById('submit-new-setlist');
+    const cancelCreateSetlist = document.getElementById('cancel-create-setlist');
+    const setlistSelect = document.getElementById('setlist-select');
+    const activeSetlist = document.getElementById('active-setlist');
+    const currentSetlistName = document.getElementById('current-setlist-name');
+    const setlistSongs = document.getElementById('setlist-songs');
+    const exportSetlist = document.getElementById('export-setlist');
+    const deleteSetlist = document.getElementById('delete-setlist');
 
     let isRunning = false;
     let interval;
@@ -562,7 +745,7 @@
     startStopButton.addEventListener('click', () => {
       isRunning ? stopMetronome() : startMetronome();
     });
-  
+
     // Load saved songs from localStorage
     function loadSavedSongs() {
       const savedSongs = localStorage.getItem('customSongs');
@@ -576,11 +759,11 @@
     function addSongToSelect(song) {
       const { name, artist, bpm } = song;
       const firstLetter = name.charAt(0).toUpperCase();
-      
+
       // Find or create the appropriate optgroup
       let optgroup = Array.from(songSelect.getElementsByTagName('optgroup'))
         .find(group => group.label === firstLetter);
-      
+
       if (!optgroup) {
         optgroup = document.createElement('optgroup');
         optgroup.label = firstLetter;
@@ -592,11 +775,11 @@
       option.value = bpm;
       option.text = `${name} - ${artist}`;
       option.dataset.artist = artist;
-      
+
       // Insert the option in alphabetical order
       const options = Array.from(optgroup.getElementsByTagName('option'));
       const insertIndex = options.findIndex(opt => opt.text > option.text);
-      
+
       if (insertIndex === -1) {
         optgroup.appendChild(option);
       } else {
@@ -620,18 +803,18 @@
       }
 
       const song = { name, artist, bpm };
-      
+
       // Get existing songs
       const savedSongs = localStorage.getItem('customSongs');
       const songs = savedSongs ? JSON.parse(savedSongs) : [];
-      
+
       // Add new song
       songs.push(song);
       localStorage.setItem('customSongs', JSON.stringify(songs));
-      
+
       // Add to select element
       addSongToSelect(song);
-      
+
       // Clear form and hide it
       nameInput.value = '';
       artistInput.value = '';
@@ -678,7 +861,7 @@
       const bpmMap = savedBpm ? JSON.parse(savedBpm) : {};
       bpmMap[selectedSong] = bpmInput.value;
       localStorage.setItem('savedBpm', JSON.stringify(bpmMap));
-      
+
       // Update the select option value
       songSelect.options[songSelect.selectedIndex].value = bpmInput.value;
     }
@@ -688,6 +871,219 @@
 
     // Save BPM button click handler
     saveBpmButton.addEventListener('click', saveCurrentBpm);
+
+    // Setlist management
+    function loadSetlists() {
+      const savedSetlists = localStorage.getItem('setlists');
+      if (savedSetlists) {
+        const setlists = JSON.parse(savedSetlists);
+        setlistSelect.innerHTML = '<option value="">-- Select a Setlist --</option>';
+        setlists.forEach(setlist => {
+          const option = document.createElement('option');
+          option.value = setlist.id;
+          option.text = setlist.name;
+          setlistSelect.appendChild(option);
+        });
+      }
+    }
+
+    function createSetlist(name) {
+      const savedSetlists = localStorage.getItem('setlists');
+      const setlists = savedSetlists ? JSON.parse(savedSetlists) : [];
+
+      if (setlists.length >= 5) {
+        alert('Maximum of 5 setlists allowed. Please delete one before creating a new one.');
+        return;
+      }
+
+      const newSetlist = {
+        id: Date.now().toString(),
+        name: name,
+        songs: []
+      };
+
+      setlists.push(newSetlist);
+      localStorage.setItem('setlists', JSON.stringify(setlists));
+
+      const option = document.createElement('option');
+      option.value = newSetlist.id;
+      option.text = newSetlist.name;
+      setlistSelect.appendChild(option);
+      setlistSelect.value = newSetlist.id;
+      displaySetlist(newSetlist);
+    }
+
+    function displaySetlist(setlist) {
+      currentSetlistName.textContent = setlist.name;
+      setlistSongs.innerHTML = '';
+
+      setlist.songs.forEach((song, index) => {
+        const songElement = document.createElement('div');
+        songElement.className = 'setlist-song';
+        songElement.innerHTML = `
+          <div class="setlist-song-info">${song.name} - ${song.artist} (${song.bpm} BPM)</div>
+          <div class="setlist-song-actions">
+            <button class="move-button" onclick="moveSong(${index}, -1)">↑</button>
+            <button class="move-button" onclick="moveSong(${index}, 1)">↓</button>
+            <button class="move-button" onclick="removeSong(${index})">×</button>
+          </div>
+        `;
+        setlistSongs.appendChild(songElement);
+      });
+
+      activeSetlist.style.display = 'block';
+    }
+
+    function addSongToSetlist(song) {
+      const selectedSetlistId = setlistSelect.value;
+      if (!selectedSetlistId) {
+        alert('Please select a setlist first');
+        return;
+      }
+
+      const savedSetlists = localStorage.getItem('setlists');
+      const setlists = JSON.parse(savedSetlists);
+      const setlistIndex = setlists.findIndex(s => s.id === selectedSetlistId);
+
+      if (setlistIndex === -1) return;
+
+      const songInfo = {
+        name: song.name,
+        artist: song.artist,
+        bpm: song.bpm
+      };
+
+      setlists[setlistIndex].songs.push(songInfo);
+      localStorage.setItem('setlists', JSON.stringify(setlists));
+      displaySetlist(setlists[setlistIndex]);
+    }
+
+    function moveSong(index, direction) {
+      const selectedSetlistId = setlistSelect.value;
+      const savedSetlists = localStorage.getItem('setlists');
+      const setlists = JSON.parse(savedSetlists);
+      const setlistIndex = setlists.findIndex(s => s.id === selectedSetlistId);
+
+      if (setlistIndex === -1) return;
+
+      const songs = setlists[setlistIndex].songs;
+      const newIndex = index + direction;
+
+      if (newIndex >= 0 && newIndex < songs.length) {
+        [songs[index], songs[newIndex]] = [songs[newIndex], songs[index]];
+        localStorage.setItem('setlists', JSON.stringify(setlists));
+        displaySetlist(setlists[setlistIndex]);
+      }
+    }
+
+    function removeSong(index) {
+      const selectedSetlistId = setlistSelect.value;
+      const savedSetlists = localStorage.getItem('setlists');
+      const setlists = JSON.parse(savedSetlists);
+      const setlistIndex = setlists.findIndex(s => s.id === selectedSetlistId);
+
+      if (setlistIndex === -1) return;
+
+      setlists[setlistIndex].songs.splice(index, 1);
+      localStorage.setItem('setlists', JSON.stringify(setlists));
+      displaySetlist(setlists[setlistIndex]);
+    }
+
+    function exportSetlistToFile() {
+      const selectedSetlistId = setlistSelect.value;
+      const savedSetlists = localStorage.getItem('setlists');
+      const setlists = JSON.parse(savedSetlists);
+      const setlist = setlists.find(s => s.id === selectedSetlistId);
+
+      if (!setlist) return;
+
+      let content = `${setlist.name}\n\n`;
+      setlist.songs.forEach((song, index) => {
+        content += `${index + 1}. ${song.name} - ${song.artist} (${song.bpm} BPM)\n`;
+      });
+
+      const blob = new Blob([content], { type: 'text/plain' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `${setlist.name}.txt`;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      URL.revokeObjectURL(url);
+    }
+
+    function deleteCurrentSetlist() {
+      if (!confirm('Are you sure you want to delete this setlist?')) return;
+
+      const selectedSetlistId = setlistSelect.value;
+      const savedSetlists = localStorage.getItem('setlists');
+      const setlists = JSON.parse(savedSetlists);
+      const newSetlists = setlists.filter(s => s.id !== selectedSetlistId);
+
+      localStorage.setItem('setlists', JSON.stringify(newSetlists));
+      loadSetlists();
+      activeSetlist.style.display = 'none';
+    }
+
+    // Event listeners for setlist management
+    createSetlistToggle.addEventListener('click', () => {
+      createSetlistForm.style.display = createSetlistForm.style.display === 'none' ? 'block' : 'none';
+    });
+
+    submitNewSetlist.addEventListener('click', () => {
+      const nameInput = document.getElementById('new-setlist-name');
+      const name = nameInput.value.trim();
+
+      if (!name) {
+        alert('Please enter a setlist name');
+        return;
+      }
+
+      createSetlist(name);
+      nameInput.value = '';
+      createSetlistForm.style.display = 'none';
+    });
+
+    cancelCreateSetlist.addEventListener('click', () => {
+      createSetlistForm.style.display = 'none';
+    });
+
+    setlistSelect.addEventListener('change', () => {
+      const selectedSetlistId = setlistSelect.value;
+      if (!selectedSetlistId) {
+        activeSetlist.style.display = 'none';
+        return;
+      }
+
+      const savedSetlists = localStorage.getItem('setlists');
+      const setlists = JSON.parse(savedSetlists);
+      const setlist = setlists.find(s => s.id === selectedSetlistId);
+
+      if (setlist) {
+        displaySetlist(setlist);
+      }
+    });
+
+    exportSetlist.addEventListener('click', exportSetlistToFile);
+    deleteSetlist.addEventListener('click', deleteCurrentSetlist);
+
+    // Modify song selection to add to setlist
+    songSelect.addEventListener('change', () => {
+      const selectedOption = songSelect.options[songSelect.selectedIndex];
+      if (selectedOption.value) {
+        const song = {
+          name: selectedOption.text.split(' - ')[0],
+          artist: selectedOption.dataset.artist,
+          bpm: selectedOption.value
+        };
+        addSongToSetlist(song);
+      }
+    });
+
+    // Load setlists when page loads
+    loadSetlists();
   </script>
 </body>
+
 </html>
