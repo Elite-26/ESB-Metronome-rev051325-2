@@ -82,6 +82,14 @@
       background-color: #4CAF50;
     }
 
+    .save-button {
+      background-color: #2196F3;
+    }
+
+    .save-button:hover {
+      background-color: #1976D2;
+    }
+
     .button-group {
       display: flex;
       justify-content: center;
@@ -313,6 +321,7 @@
     <div class="button-group">
       <button id="start-stop">Start</button>
       <button id="sound-toggle" class="sound-toggle">🔇 Sound</button>
+      <button id="save-bpm" class="save-button">💾 Save BPM</button>
     </div>
 
     <div class="beat-lights-container">
@@ -400,6 +409,7 @@
     const startStopButton = document.getElementById('start-stop');
     const songSelect = document.getElementById('song-select');
     const soundToggleButton = document.getElementById('sound-toggle');
+    const saveBpmButton = document.getElementById('save-bpm');
 
     let isRunning = false;
     let interval;
@@ -480,6 +490,40 @@
     startStopButton.addEventListener('click', () => {
       isRunning ? stopMetronome() : startMetronome();
     });
+  
+    // Load saved BPM values from localStorage
+    function loadSavedBpm() {
+      const savedBpm = localStorage.getItem('savedBpm');
+      if (savedBpm) {
+        const bpmMap = JSON.parse(savedBpm);
+        // Update select options with saved BPM values
+        Array.from(songSelect.options).forEach(option => {
+          if (option.value && bpmMap[option.text]) {
+            option.value = bpmMap[option.text];
+          }
+        });
+      }
+    }
+
+    // Save current BPM for selected song
+    function saveCurrentBpm() {
+      const selectedSong = songSelect.options[songSelect.selectedIndex].text;
+      if (selectedSong === '-- Select a song --') return;
+
+      const savedBpm = localStorage.getItem('savedBpm');
+      const bpmMap = savedBpm ? JSON.parse(savedBpm) : {};
+      bpmMap[selectedSong] = bpmInput.value;
+      localStorage.setItem('savedBpm', JSON.stringify(bpmMap));
+      
+      // Update the select option value
+      songSelect.options[songSelect.selectedIndex].value = bpmInput.value;
+    }
+
+    // Load saved BPM values when page loads
+    loadSavedBpm();
+
+    // Save BPM button click handler
+    saveBpmButton.addEventListener('click', saveCurrentBpm);
   </script>
 </body>
 </html>
