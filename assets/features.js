@@ -191,6 +191,20 @@ function handleSongRowClick(song) {
 function renderSongList() {
   songListDropdown.innerHTML = '';
 
+  // Add New Song row
+  const addNewSongRow = document.createElement('div');
+  addNewSongRow.className = 'song-list-row add-new-song-row';
+  addNewSongRow.innerHTML = `
+    <span class="add-new-song-label" style="flex:1; text-align:center; font-weight:bold; color:#1976D2; cursor:pointer;">+ Add New Song</span>
+  `;
+  songListDropdown.appendChild(addNewSongRow);
+
+  // Add click handler for Add New Song
+  addNewSongRow.querySelector('.add-new-song-label').addEventListener('click', () => {
+    addSongForm.style.display = 'block';
+    closeSongDropdown();
+  });
+
   // Select All row
   const selectAllRow = document.createElement('div');
   selectAllRow.className = 'song-list-row select-all-row';
@@ -288,7 +302,6 @@ function renderSongList() {
     });
   });
 }
-
 function saveCustomSongList() {
   // Save only custom songs to localStorage
   localStorage.setItem('customSongs', JSON.stringify(customSongList.filter(s => s.isCustom)));
@@ -352,13 +365,18 @@ function loadSetlists(setlistSelect) {
   const savedSetlists = localStorage.getItem("setlists");
   if (savedSetlists) {
     const setlists = JSON.parse(savedSetlists);
-    setlistSelect.innerHTML = '<option value="">-- Select a Setlist --</option>';
+    setlistSelect.innerHTML = '<option value="">-- Set List --</option>';
     setlists.forEach((setlist) => {
       const option = document.createElement("option");
       option.value = setlist.id;
       option.text = setlist.name;
       setlistSelect.appendChild(option);
     });
+    // Add Create New Setlist option
+    const createNewOption = document.createElement("option");
+    createNewOption.value = "create_new";
+    createNewOption.text = "+ Create New Setlist";
+    setlistSelect.appendChild(createNewOption);
   }
 }
 
@@ -449,6 +467,28 @@ function displaySetlist(setlist) {
     `;
     setlistSongs.appendChild(songElement);
   });
+
+  // Add save button
+  const saveButton = document.createElement("button");
+  saveButton.className = "save-setlist-button";
+  saveButton.textContent = "Save Setlist";
+  saveButton.style.marginTop = "10px";
+  saveButton.style.padding = "8px 16px";
+  saveButton.style.backgroundColor = "#1976D2";
+  saveButton.style.color = "white";
+  saveButton.style.border = "none";
+  saveButton.style.borderRadius = "4px";
+  saveButton.style.cursor = "pointer";
+  saveButton.onclick = () => {
+    const savedSetlists = JSON.parse(localStorage.getItem("setlists"));
+    const setlistIndex = savedSetlists.findIndex(s => s.id === setlist.id);
+    if (setlistIndex !== -1) {
+      savedSetlists[setlistIndex] = setlist;
+      localStorage.setItem("setlists", JSON.stringify(savedSetlists));
+      alert("Setlist saved successfully!");
+    }
+  };
+  setlistSongs.appendChild(saveButton);
 
   activeSetlist.style.display = "block";
 }
@@ -621,6 +661,11 @@ function initializeUI() {
 
   setlistSelect.addEventListener("change", () => {
     const selectedSetlistId = setlistSelect.value;
+    if (selectedSetlistId === "create_new") {
+      createSetlistForm.style.display = "block";
+      setlistSelect.value = ""; // Reset selection
+      return;
+    }
     if (!selectedSetlistId) {
       activeSetlist.style.display = "none";
       return;
@@ -726,3 +771,4 @@ function saveNewSong(name, artist, bpm) {
   localStorage.setItem("customSongs", JSON.stringify(songs));
   return song;
 }
+
